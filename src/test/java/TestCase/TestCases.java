@@ -1,5 +1,6 @@
 package TestCase;
 
+import io.restassured.RestAssured;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 
 public class TestCases {
@@ -46,4 +48,20 @@ public class TestCases {
                 .assertThat().statusCode(200)
                 .assertThat().body("data.price", equalTo(1849.99f));
     }
+
+    @Test
+        public void TestSchema(){
+            RestAssured.baseURI = "https://api.restful-api.dev";
+            given()
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .get("/objects/ff8081819782e69e019bdab12066113c")
+                    .then()
+                    .log().all()
+                    .body(matchesJsonSchemaInClasspath("Schema.json"));
+
+        }
+    }
+
+
 }
