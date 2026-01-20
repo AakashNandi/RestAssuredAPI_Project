@@ -1,26 +1,31 @@
 package TestCase;
 
-import io.restassured.RestAssured;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.*;
 
 public class TestCases {
     @Test
     public void TestingAPI() {
-        RestAssured.baseURI = "https://api.restful-api.dev";
-        given()
-                .header("Content-Type", "application/json")
 
-                .when()
+        Map<String, List<Integer>> queryParams = new HashMap<>();
+        queryParams.put("id", Arrays.asList(3,5,10));
+        given()
+                .baseUri("https://api.restful-api.dev")
+                .header("Content-Type", "application/json")
+                .queryParams(queryParams)
+        .when()             //shift + tab to format
                 .get("/objects")
-                .then()
+        .then()
                 .log().all()
                 .assertThat().statusCode(200)
                 .assertThat().time(lessThan(5000L))
-                .assertThat().header("connection", "keep-alive");
-               //.assertThat().body("name", equalTo("Apple MacBook Pro 19 (Updated Name)"));
+                .assertThat().header("connection", "keep-alive")
+                .assertThat().body("id", hasItems("3","5","10"));
     }
 }
