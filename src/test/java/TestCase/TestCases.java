@@ -61,7 +61,5 @@ public class TestCases {
                     .body(matchesJsonSchemaInClasspath("Schema.json"));
 
         }
-    }
-
 
 }
